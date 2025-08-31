@@ -16,8 +16,8 @@ WORKDIR /app
 COPY package.json package-lock.json* ./
 RUN npm ci
 COPY . .
-EXPOSE 5173
-CMD ["npm", "run", "dev", "--", "--host"]
+EXPOSE 3006
+CMD ["npm", "run", "dev", "--", "--host", "--port", "3006"]
 
 # Build stage
 FROM base AS builder
@@ -67,8 +67,8 @@ USER nextjs
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD wget --no-verbose --tries=1 --spider http://localhost:80/ || exit 1
+  CMD wget --no-verbose --tries=1 --spider http://localhost:3006/ || exit 1
 
-EXPOSE 80
+EXPOSE 3006
 
 CMD ["nginx", "-g", "daemon off;"]
