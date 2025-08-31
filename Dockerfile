@@ -38,14 +38,16 @@ ENV VITE_APP_VERSION=${VITE_APP_VERSION}
 # Build the application
 RUN npm run build
 
-# Production stage with Nginx
-FROM nginx:1.25-alpine AS production
-
-# Copy custom nginx config
-COPY docker/nginx.conf /etc/nginx/conf.d/default.conf
+# Production stage with serve
+FROM base AS production
+WORKDIR /app
 
 # Copy built files from builder stage
-COPY --from=builder /app/dist /usr/share/nginx/html
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/package*.json ./
+
+# Install serve for serving static files
+RUN npm install -g serve
 
 # Add labels for better image management
 LABEL maintainer="BlueHooper Team"
@@ -54,16 +56,13 @@ LABEL description="BlueHooper Construction Management Frontend"
 
 # Create non-root user for security
 RUN addgroup -g 1001 -S nodejs && \
-    adduser -S nextjs -u 1001
+    adduser -S frontend -u 1001
 
 # Set proper permissions
-RUN chown -R nextjs:nodejs /usr/share/nginx/html && \
-    chown -R nextjs:nodejs /var/cache/nginx && \
-    chown -R nextjs:nodejs /var/log/nginx && \
-    chown -R nextjs:nodejs /etc/nginx/conf.d
+RUN chown -R frontend:nodejs /app
 
 # Switch to non-root user
-USER nextjs
+USER frontend
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
@@ -71,4 +70,4 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
 
 EXPOSE 3006
 
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["serve", "-s", "dist", "-l", "3006"]
