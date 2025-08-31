@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  # Development frontend with hot reload
+  frontend-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: dev
+    container_name: bluehooper-frontend-dev
+    ports:
+      - "${FRONTEND_DEV_PORT:-5173}:5173"
+    environment:
+      - NODE_ENV=development
+      - VITE_API_BASE_URL=${VITE_API_BASE_URL:-http://localhost:3001/api}
+      - VITE_APP_NAME=${VITE_APP_NAME:-BlueHooper}
+      - VITE_APP_VERSION=${VITE_APP_VERSION:-1.0.0-dev}
+    volumes:
+      # Mount source code for hot reload
+      - .:/app
+      - /app/node_modules
+      - /app/dist
+    networks:
+      - frontend-dev-network
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+
+networks:
+  frontend-dev-network:
+    driver: bridge
+    name: bluehooper-frontend-dev-network
