@@ -1,7 +1,7 @@
-import RegisterForm from '../../components/forms/RegisterForm';
+import MultiStepRegistration from '../../components/forms/MultiStepRegistration';
 
 const RegisterPage = () => {
-  return <RegisterForm />;
+  return <MultiStepRegistration />;
 };
 
 export default RegisterPage;

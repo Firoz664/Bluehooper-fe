@@ -9,7 +9,10 @@ import LandingPage from '../pages/LandingPage';
 import LoginPage from '../pages/auth/LoginPage';
 import RegisterPage from '../pages/auth/RegisterPage';
 import Dashboard from '../pages/dashboard/Dashboard';
-import ProjectsPage from '../pages/dashboard/ProjectsPage';
+import ProjectsPage from '../pages/projects/ProjectsPage';
+import CreateProjectPage from '../pages/projects/CreateProjectPage';
+import EditProjectPage from '../pages/projects/EditProjectPage';
+import ProjectDetailPage from '../pages/projects/ProjectDetailPage';
 import TasksPage from '../pages/dashboard/TasksPage';
 import UsersPage from '../pages/dashboard/UsersPage';
 import DocumentsPage from '../pages/dashboard/DocumentsPage';
@@ -47,6 +50,9 @@ const AppRoutes = () => {
       >
         <Route index element={<Dashboard />} />
         <Route path="projects" element={<ProjectsPage />} />
+        <Route path="projects/new" element={<CreateProjectPage />} />
+        <Route path="projects/:projectId" element={<ProjectDetailPage />} />
+        <Route path="projects/:projectId/edit" element={<EditProjectPage />} />
         <Route path="tasks" element={<TasksPage />} />
         <Route path="users" element={<UsersPage />} />
         <Route path="documents" element={<DocumentsPage />} />

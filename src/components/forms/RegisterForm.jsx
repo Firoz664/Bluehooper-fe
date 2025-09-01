@@ -5,8 +5,10 @@ import { registerUser, clearError } from '../../store/slices/authSlice';
 
 const RegisterForm = () => {
   const [formData, setFormData] = useState({
-    name: '',
+    firstName: '',
+    lastName: '',
     email: '',
+    phone:'',
     password: '',
     confirmPassword: '',
   });
@@ -35,11 +37,17 @@ const RegisterForm = () => {
     }
 
     try {
-      await dispatch(registerUser({
-        name: formData.name,
+      const payload = {
+        first_name: formData.firstName,
+        last_name: formData.lastName,
         email: formData.email,
+        phone: formData.phone,
         password: formData.password,
-      })).unwrap();
+        role: "owner",
+        type: "partner",
+      };
+      console.log('Registration payload:', payload);
+      await dispatch(registerUser(payload)).unwrap();
       navigate('/dashboard');
     } catch (error) {
       console.error('Registration failed:', error);
@@ -71,19 +79,35 @@ const RegisterForm = () => {
           )}
           <div className="space-y-4">
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-                Full Name
+              <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">
+                First Name
               </label>
               <input
-                id="name"
-                name="name"
+                id="firstName"
+                name="firstName"
                 type="text"
-                autoComplete="name"
+                autoComplete="given-name"
                 required
-                value={formData.name}
+                value={formData.firstName}
                 onChange={handleChange}
                 className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
-                placeholder="Enter your full name"
+                placeholder="Enter your first name"
+              />
+            </div>
+             <div>
+              <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">
+                Last Name
+              </label>
+              <input
+                id="lastName"
+                name="lastName"
+                type="text"
+                autoComplete="family-name"
+                required
+                value={formData.lastName}
+                onChange={handleChange}
+                className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                placeholder="Enter your last name"
               />
             </div>
             <div>
@@ -100,6 +124,22 @@ const RegisterForm = () => {
                 onChange={handleChange}
                 className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
                 placeholder="Enter your email address"
+              />
+            </div>
+               <div>
+              <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+                Phone
+              </label>
+              <input
+                id="phone"
+                name="phone"
+                type="tel"
+                autoComplete="tel"
+                required
+                value={formData.phone}
+                onChange={handleChange}
+                className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                placeholder="Enter your phone number"
               />
             </div>
             <div>
