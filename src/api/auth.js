@@ -32,4 +32,12 @@ export const authAPI = {
   resetPassword: async ({ token, password }) => {
     return apiClient.post('/auth/reset-password', { token, password });
   },
+
+  getGoogleAuthURL: async () => {
+    return apiClient.get('/auth/google/url');
+  },
+
+  googleCallback: async ({ code, state }) => {
+    return apiClient.post('/auth/google/callback', { code, state });
+  },
 };

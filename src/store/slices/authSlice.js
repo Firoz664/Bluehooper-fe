@@ -60,6 +60,22 @@ export const logoutUser = createAsyncThunk(
   }
 );
 
+export const googleAuth = createAsyncThunk(
+  'auth/googleAuth',
+  async ({ code, state }, { rejectWithValue }) => {
+    try {
+      const response = await authAPI.googleCallback({ code, state });
+      const { user, tokens } = response.data.data;
+      localStorage.setItem('accessToken', tokens.access_token);
+      localStorage.setItem('refreshToken', tokens.refresh_token);
+      localStorage.setItem('user', JSON.stringify(user));
+      return { user, tokens };
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || 'Google authentication failed');
+    }
+  }
+);
+
 const authSlice = createSlice({
   name: 'auth',
   initialState,
@@ -128,6 +144,22 @@ const authSlice = createSlice({
         state.accessToken = null;
         state.refreshToken = null;
         state.isAuthenticated = false;
+      })
+      .addCase(googleAuth.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(googleAuth.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.user = action.payload.user;
+        state.accessToken = action.payload.tokens.access_token;
+        state.refreshToken = action.payload.tokens.refresh_token;
+        state.isAuthenticated = true;
+        state.error = null;
+      })
+      .addCase(googleAuth.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
       });
   },
 });
