@@ -20,10 +20,10 @@ const LoginForm = () => {
   const from = location.state?.from?.pathname || '/dashboard';
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: type === 'checkbox' ? checked : value,
     }));
     if (error) {
       dispatch(clearError());
@@ -32,14 +32,26 @@ const LoginForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Basic validation
+    if (!formData.email.trim()) {
+      dispatch(clearError());
+      return;
+    }
+    if (!formData.password.trim()) {
+      dispatch(clearError());
+      return;
+    }
+    
     try {
       await dispatch(loginUser({
-        email: formData.email,
+        email: formData.email.trim(),
         password: formData.password
       })).unwrap();
       navigate(from, { replace: true });
     } catch (error) {
       console.error('Login failed:', error);
+      // Error is already handled by the Redux slice
     }
   };
 

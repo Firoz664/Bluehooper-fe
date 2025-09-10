@@ -2,17 +2,15 @@ import { useSelector } from 'react-redux';
 import { Navigate, useLocation } from 'react-router-dom';
 
 const ProtectedRoute = ({ children }) => {
-  // DEVELOPMENT MODE: Route protection is disabled for development
-  // Uncomment the code below to enable authentication checks in production
-  
-  /*
   const { isAuthenticated } = useSelector((state) => state.auth);
   const location = useLocation();
 
-  if (!isAuthenticated) {
+  // Only skip authentication in development mode with explicit env var
+  const isDevelopment = import.meta.env.DEV && import.meta.env.VITE_SKIP_AUTH === 'true';
+  
+  if (!isDevelopment && !isAuthenticated) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
-  */
 
   return children;
 };

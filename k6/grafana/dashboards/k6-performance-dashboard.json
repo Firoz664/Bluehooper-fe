@@ -1,0 +1,133 @@
+{
+  "dashboard": {
+    "id": null,
+    "title": "K6 BlueHooper Performance Dashboard",
+    "tags": ["k6", "performance", "bluehooper"],
+    "timezone": "browser",
+    "panels": [
+      {
+        "id": 1,
+        "title": "Virtual Users",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "vus",
+            "refId": "A",
+            "datasource": "InfluxDB",
+            "rawSql": "SELECT mean(\"value\") FROM \"vus\" WHERE $timeFilter GROUP BY time($__interval) fill(null)"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0}
+      },
+      {
+        "id": 2,
+        "title": "Request Rate (req/s)",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "http_reqs",
+            "refId": "A",
+            "datasource": "InfluxDB",
+            "rawSql": "SELECT derivative(mean(\"value\"), 1s) FROM \"http_reqs\" WHERE $timeFilter GROUP BY time($__interval) fill(null)"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0}
+      },
+      {
+        "id": 3,
+        "title": "Response Time",
+        "type": "timeseries",
+        "targets": [
+          {
+            "expr": "http_req_duration",
+            "refId": "A",
+            "datasource": "InfluxDB",
+            "rawSql": "SELECT mean(\"value\") FROM \"http_req_duration\" WHERE $timeFilter GROUP BY time($__interval) fill(null)"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 24, "x": 0, "y": 8}
+      },
+      {
+        "id": 4,
+        "title": "Error Rate",
+        "type": "timeseries",
+        "targets": [
+          {
+            "expr": "http_req_failed",
+            "refId": "A",
+            "datasource": "InfluxDB",
+            "rawSql": "SELECT mean(\"value\") * 100 FROM \"http_req_failed\" WHERE $timeFilter GROUP BY time($__interval) fill(null)"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 16}
+      },
+      {
+        "id": 5,
+        "title": "Data Received",
+        "type": "timeseries",
+        "targets": [
+          {
+            "expr": "data_received",
+            "refId": "A",
+            "datasource": "InfluxDB",
+            "rawSql": "SELECT derivative(mean(\"value\"), 1s) FROM \"data_received\" WHERE $timeFilter GROUP BY time($__interval) fill(null)"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 16}
+      },
+      {
+        "id": 6,
+        "title": "Response Time Percentiles",
+        "type": "timeseries",
+        "targets": [
+          {
+            "expr": "http_req_duration_p95",
+            "refId": "A",
+            "datasource": "InfluxDB",
+            "rawSql": "SELECT mean(\"value\") FROM \"http_req_duration\" WHERE \"stat\"='p(95)' AND $timeFilter GROUP BY time($__interval) fill(null)"
+          },
+          {
+            "expr": "http_req_duration_p99",
+            "refId": "B",
+            "datasource": "InfluxDB",
+            "rawSql": "SELECT mean(\"value\") FROM \"http_req_duration\" WHERE \"stat\"='p(99)' AND $timeFilter GROUP BY time($__interval) fill(null)"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 24, "x": 0, "y": 24}
+      },
+      {
+        "id": 7,
+        "title": "Custom Metrics - Load Time",
+        "type": "timeseries",
+        "targets": [
+          {
+            "expr": "load_time",
+            "refId": "A",
+            "datasource": "InfluxDB",
+            "rawSql": "SELECT mean(\"value\") FROM \"load_time\" WHERE $timeFilter GROUP BY time($__interval) fill(null)"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 32}
+      },
+      {
+        "id": 8,
+        "title": "Page Transitions",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "page_transitions",
+            "refId": "A",
+            "datasource": "InfluxDB",
+            "rawSql": "SELECT sum(\"value\") FROM \"page_transitions\" WHERE $timeFilter"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 32}
+      }
+    ],
+    "time": {
+      "from": "now-5m",
+      "to": "now"
+    },
+    "refresh": "5s"
+  }
+}

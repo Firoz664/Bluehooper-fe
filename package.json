@@ -7,7 +7,15 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "perf:setup": "./k6/scripts/run-tests.sh setup",
+    "perf:test": "./k6/scripts/run-tests.sh landing-page",
+    "perf:stress": "./k6/scripts/run-tests.sh stress-test",
+    "perf:mobile": "./k6/scripts/run-tests.sh mobile-simulation",
+    "perf:journey": "./k6/scripts/run-tests.sh user-journey",
+    "perf:api": "./k6/scripts/run-tests.sh api-load-test",
+    "perf:all": "./k6/scripts/run-tests.sh all",
+    "perf:cleanup": "./k6/scripts/run-tests.sh cleanup"
   },
   "dependencies": {
     "@google-cloud/local-auth": "^3.0.1",
